@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приветственное приложение</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'greetings/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-card">
+            <h1>Добро пожаловать!</h1>
+            
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <form method="post" class="name-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error-message">
+                            {{ form.name.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="submit-btn">Отправить</button>
+            </form>
+        </div>
+        
+        {% if all_names %}
+        <div class="history-section">
+            <h2>Список пользователей</h2>
+            <ul class="names-list">
+                {% for user in all_names %}
+                    <li>{{ user.name }} - {{ user.created_at|date:"d.m.Y H:i" }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
